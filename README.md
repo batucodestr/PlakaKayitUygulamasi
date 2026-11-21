@@ -92,5 +92,3 @@ PlakaKayıtUygulamasi/
 ## Projenin Amacı
 
 Bu proje, masaüstü uygulaması ile veritabanı arasındaki temel iletişimi göstermek için hazırlanmıştır. Kullanıcı arayüzündeki bir buton aracılığıyla SQL sorgusu çalıştırılır, sonuçlar bellekteki `DataTable` nesnesine aktarılır ve son olarak tablo biçiminde kullanıcıya sunulur.
-
-İlerleyen aşamalarda kayıt ekleme, silme ve güncelleme işlemleri eklenerek uygulama tam kapsamlı bir CRUD uygulamasına dönüştürülebilir.
