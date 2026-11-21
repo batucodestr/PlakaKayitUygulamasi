@@ -82,19 +82,3 @@ PlakaKayıtUygulamasi/
 ├── Database1_log.ldf
 └── PlakaKayıtUygulamasi.csproj
 ```
-
-## GitHub'a Gönderme
-
-Uzak depo zaten oluşturulduysa:
-
-```bash
-git add README.md
-git commit -m "README dosyası eklendi"
-git push origin main
-```
-
-Varsayılan dalınız `master` ise son komutu şu şekilde çalıştırın:
-
-```bash
-git push origin master
-```
