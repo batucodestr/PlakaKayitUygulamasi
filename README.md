@@ -1,41 +1,62 @@
 # Plaka Kayıt Uygulaması
 
-Windows Forms ve SQL Server LocalDB kullanılarak geliştirilmiş basit bir plaka-şehir kayıt uygulamasıdır. Uygulama, şehir ve plaka bilgilerini `DataGridView` üzerinde listelemek için kullanılır.
+## Proje Hakkında
 
-## Özellikler
+Plaka Kayıt Uygulaması, şehirlerin plaka kodlarını kaydetmek ve kayıtlı şehir-plaka bilgilerini görüntülemek amacıyla geliştirilmiş bir masaüstü uygulamasıdır.
 
-- SQL Server LocalDB bağlantısı
-- `Sehirler` tablosundaki kayıtları listeleme
-- Plaka ve şehir bilgileri için giriş alanları
-- Windows Forms arayüzü
+Uygulama Windows Forms arayüzü kullanır ve verileri SQL Server LocalDB üzerinde bulunan `Database1.mdf` veritabanı dosyasından okur. Kullanıcı **Listele** butonuna bastığında `Sehirler` tablosundaki kayıtlar alınarak `DataGridView` kontrolünde gösterilir.
 
-## Gereksinimler
+Bu proje, C# ile Windows Forms uygulaması geliştirme, SQL bağlantısı kurma, veritabanından veri çekme ve çekilen verileri tablo şeklinde görüntüleme konularını uygulamalı olarak göstermektedir.
 
-- Windows
-- Visual Studio 2022 veya daha yeni bir sürüm
-- .NET 10 SDK
+## Kullanılan Teknolojiler
+
+- C#
+- .NET 10 Windows Forms
+- Microsoft.Data.SqlClient
 - SQL Server Express LocalDB
+- SQL Server MDF veritabanı
+- DataGridView
 
-## Projeyi Çalıştırma
+## Uygulamanın Çalışma Mantığı
 
-1. Repoyu klonlayın veya projeyi indirin.
+1. Uygulama açıldığında `Form1` oluşturulur.
+2. `Form1.cs` içinde tanımlanan SQL bağlantısı `Database1.mdf` dosyasını hedefler.
+3. Kullanıcı **Listele** butonuna basar.
+4. `btnListele_Click` metodu çalışır.
+5. `Sehirler` tablosu için aşağıdaki sorgu çalıştırılır:
 
-   ```bash
-   git clone <REPO_URL>
-   cd PlakaKayıtUygulamasi
+   ```sql
+   SELECT * FROM Sehirler;
    ```
 
-2. `PlakaKayıtUygulamasi.slnx` veya `PlakaKayıtUygulamasi.csproj` dosyasını Visual Studio ile açın.
+6. Sorgudan dönen kayıtlar `DataTable` içine alınır.
+7. `DataTable`, `dgvSehirler.DataSource` özelliğine atanır.
+8. Kayıtlar form üzerindeki `DataGridView` kontrolünde görüntülenir.
 
-3. `Database1.mdf` dosyasının proje içinde bulunduğunu kontrol edin.
+## Arayüz
 
-4. Projeyi derleyin ve çalıştırın.
+Form üzerinde şu kontroller bulunmaktadır:
 
-5. Uygulamada **Listele** butonuna basarak kayıtları `DataGridView` üzerinde görüntüleyin.
+- **Plaka** metin kutusu: Plaka kodu girişi için hazırlanmıştır.
+- **Şehir** metin kutusu: Şehir adı girişi için hazırlanmıştır.
+- **Ekle** butonu: Yeni kayıt ekleme işlemi için arayüzde bulunmaktadır.
+- **Sil** butonu: Kayıt silme işlemi için arayüzde bulunmaktadır.
+- **Güncelle** butonu: Kayıt güncelleme işlemi için arayüzde bulunmaktadır.
+- **Listele** butonu: Veritabanındaki kayıtları listeler.
+- **DataGridView**: Şehir ve plaka kayıtlarını tablo halinde gösterir.
 
-## Veritabanı Bağlantısı
+Mevcut uygulama akışında çalışan temel işlem, `Listele` butonu ile kayıtların görüntülenmesidir. Ekleme, silme ve güncelleme işlemleri için arayüz kontrolleri hazırlanmış olup bu işlemlere ait veritabanı kodları ayrıca eklenebilir.
 
-Uygulama SQL Server LocalDB kullanır. Bağlantı `Form1.cs` dosyasında tanımlıdır:
+## Veritabanı
+
+Proje, SQL Server LocalDB ile birlikte gelen MDF veritabanı dosyasını kullanır. Veritabanı dosyaları şunlardır:
+
+- `Database1.mdf`: Verilerin bulunduğu ana veritabanı dosyası.
+- `Database1_log.ldf`: Veritabanının işlem günlük dosyası.
+
+Uygulamanın kullandığı tablo `Sehirler` tablosudur. Listeleme işlemi bu tablodaki tüm kayıtları getirir.
+
+Bağlantı, `Form1.cs` içerisinde aşağıdaki yapı ile sağlanır:
 
 ```csharp
 Data Source=(LocalDB)\\MSSQLLocalDB;
@@ -43,34 +64,9 @@ AttachDbFilename=|DataDirectory|\\Database1.mdf;
 Integrated Security=True
 ```
 
-`Database1.mdf` ve `Database1_log.ldf` dosyalarının derleme çıktısına kopyalanması proje dosyasında yapılandırılmıştır.
+MDF ve LDF dosyalarının derleme çıktısına kopyalanması proje dosyasında yapılandırılmıştır.
 
-## Veritabanı Tablosu
-
-Listeleme işlemi aşağıdaki tabloyu kullanır:
-
-```sql
-SELECT * FROM Sehirler;
-```
-
-Tablonun mevcut olmadığını belirten bir hata alırsanız, LocalDB içindeki MDF dosyasının doğru dosya olduğunu ve `Sehirler` tablosunun bulunduğunu kontrol edin.
-
-## Sorun Giderme
-
-### `SehirlerDB.mdf` bulunamadı veya eklenemedi hatası
-
-Hata mesajında eski `SehirlerDB.mdf` yolu görünüyorsa eski derleme çıktısı çalışıyor olabilir:
-
-1. Uygulamayı ve Visual Studio'yu kapatın.
-2. Projedeki `bin` ve `obj` klasörlerini silin.
-3. Visual Studio'yu yeniden açın.
-4. **Clean Solution** ve ardından **Rebuild Solution** çalıştırın.
-
-### Aynı isimli veritabanı zaten var hatası
-
-LocalDB içinde aynı veritabanı daha önce eklenmiş olabilir. SQL Server Object Explorer üzerinden eski bağlantıyı ayırın veya LocalDB örneğini yeniden başlatın. Daha sonra projeyi yeniden derleyin.
-
-## Proje Yapısı
+## Proje Dosyaları
 
 ```text
 PlakaKayıtUygulamasi/
@@ -82,3 +78,19 @@ PlakaKayıtUygulamasi/
 ├── Database1_log.ldf
 └── PlakaKayıtUygulamasi.csproj
 ```
+
+### Dosyaların Görevleri
+
+- `Program.cs`: Uygulamanın başlangıç noktasıdır ve ana formu çalıştırır.
+- `Form1.cs`: Veritabanı bağlantısını ve **Listele** butonunun çalışma kodunu içerir.
+- `Form1.Designer.cs`: Form üzerindeki buton, metin kutusu, etiket ve `DataGridView` kontrollerinin tasarım kodunu içerir.
+- `Form1.resx`: Formun kaynak bilgilerini içerir.
+- `Database1.mdf`: Uygulamanın kullandığı SQL Server LocalDB veritabanıdır.
+- `Database1_log.ldf`: SQL Server işlem günlük dosyasıdır.
+- `PlakaKayıtUygulamasi.csproj`: .NET hedefini, Windows Forms ayarlarını, `Microsoft.Data.SqlClient` paketini ve veritabanı dosyalarının kopyalanma ayarlarını içerir.
+
+## Projenin Amacı
+
+Bu proje, masaüstü uygulaması ile veritabanı arasındaki temel iletişimi göstermek için hazırlanmıştır. Kullanıcı arayüzündeki bir buton aracılığıyla SQL sorgusu çalıştırılır, sonuçlar bellekteki `DataTable` nesnesine aktarılır ve son olarak tablo biçiminde kullanıcıya sunulur.
+
+İlerleyen aşamalarda kayıt ekleme, silme ve güncelleme işlemleri eklenerek uygulama tam kapsamlı bir CRUD uygulamasına dönüştürülebilir.
